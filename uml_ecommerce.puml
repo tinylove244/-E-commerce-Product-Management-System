@@ -1,0 +1,84 @@
+@startuml
+interface Discountable {
+    + double applyDiscount(double rate)
+}
+
+class Product implements Discountable {
+    - int id
+    - string name
+    - double price
+    - int quantity
+    + Product(int id, string name, double price, int quantity)
+    + virtual void printInformation()
+    + int getId() const
+    + string getName() const
+    + double getPrice() const
+    + int getQuantity() const
+    + void updateQuantity(int qty)
+    + double applyDiscount(double rate) override
+    + bool operator==(const Product& other) const
+    + bool operator<(const Product& other) const
+}
+
+class Electronic extends Product {
+    - int warrantyMonths
+    - double shippingFee
+    - double powerUsage
+    + Electronic(int id, string name, double price, int quantity, int warrantyMonths, double shippingFee, int powerUsage)
+    + void printInformation() override
+    + int getWarrantyMonths() const
+    + double getShippingFee() const
+    + double getPowerUsage() const
+    + double estimateMonthlyUsage(int hoursPerDay) const
+    + double applyDiscount(double rate) override
+}
+
+class InventoryList<T> {
+    - vector<T> items
+    + void addItem(const T& item)
+    + void removeItem(const T& item)
+    + T* findItem(const T& item)
+    + void printALl()
+}
+
+class ShoppingCart {
+    - InventoryList<Product*> items
+    - double totalPrice
+    - int totalQuantity
+    + ShoppingCart()
+    + ShoppingCart& operator+=(Product* a)
+    + ShoppingCart& operator-=(Product* a)
+    + void showCart()
+    + void clearCart()
+    + void removeProduct(Product* p)
+    + Order checkout()
+    + double getTotalPrice() const
+    + int getTotalQuantity() const
+    + InventoryList<Product*> getItems() const
+}
+
+class Order implements Discountable {
+    - InventoryList<Product*> items
+    - int id
+    - string customerName
+    - double totalPrice
+    - int totalQuantity
+    - string status
+    + Order(int id, string Name, ShoppingCart cart)
+    + bool confirmOrder()
+    + void displayOrder()
+    + double applyDiscount(double rate) override
+    + void setStatus(const string& newStatus)
+    + int getId() const
+    + string getCustomerName() const
+    + string getStatus() const
+    + double getTotalPrice() const
+    + int getTotalQuantity() const
+}
+
+Discountable <|.. Product
+Discountable <|.. Order
+Product <|-- Electronic
+ShoppingCart "1" --> "*" Product
+Order "1" --> "*" Product
+@enduml
